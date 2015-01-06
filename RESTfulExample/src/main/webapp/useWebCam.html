@@ -1,0 +1,53 @@
+<!DOCTYPE html><html>
+<head> 
+<meta charset="UTF-8" />
+<meta name="author" content="Saad Mousliki" />
+<title>Use WebCam In Browser by Saad Mousliki</title> 
+<script type="text/javascript"> 
+window.onload = function () {
+
+           var isWebkit = false;    
+
+          
+ 
+function onSuccess(stream) { 
+var videoElement = document.getElementById("video1"); 
+var StreamSource; 
+	videoElement.autoplay = true; 
+if (!isWebkit) {
+        StreamSource = stream;
+    }
+    else {
+        StreamSource = webkitURL.createObjectURL(stream);
+    } 
+videoElement.src = StreamSource; 
+}
+ 
+ function onError(er) {
+
+    alert("Error function reached, Can't Access the user devices");
+
+} 
+ try {
+ 	//for Opera or others 
+	
+	isWebkit = false; 
+	   navigator.webkitGetUserMedia({ video: true, audio: true }, onSuccess, onError); 
+} 
+    catch (e) {
+    	//for webkit
+     	isWebkit = true;	
+  navigator.webkitGetUserMedia('video, audio', onSuccess, onError); 
+}  
+ 
+}
+
+</script> 
+</head> 
+<body> 
+<div style="float:left"> 
+<p>Display your WebCam</p> 
+<video width="320" height="240" id="video1"></video> 
+</div> 
+</body> 
+</html>
