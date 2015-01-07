@@ -6,9 +6,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -69,6 +66,10 @@ public class UploadFileService {
 		String personName = "";
 		String corpID = "";
 		Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
+		if (TemplateUtil.templates == null || TemplateUtil.templates.isEmpty()){
+			System.out.println("Calling initializeSystem to generate templates");
+			initializeSystem();
+		}
 		try {
 			personName = uploadForm.get("name").get(0).getBodyAsString();
 			corpID = uploadForm.get("corpid").get(0).getBodyAsString();
@@ -153,7 +154,7 @@ public class UploadFileService {
 				//writeFile(bytes,"C:\\test.png");
 				
 				result += templateMatcher(fileName);
-//				result += getEmotionDetails(fileName);
+				result += getEmotionDetails(fileName);
 				//System.out.println("Done");
 
 			} catch (IOException e) {
