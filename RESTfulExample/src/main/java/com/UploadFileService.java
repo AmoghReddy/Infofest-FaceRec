@@ -23,6 +23,7 @@ import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.json.JSONException;
 
 import Luxand.FSDK;
+import fidelity.util.Constants;
 import fidelity.util.TemplateUtil;
 
 @Path("/face")
@@ -57,26 +58,35 @@ public class UploadFileService {
 		return Response.status(200).entity("The Templates are generated.").build();
 	}
 	
+		
 	@POST
 	@Path("/register")
 	@Consumes("multipart/form-data")
-	public Response register(MultipartFormDataInput input) {
+	public Response register(final MultipartFormDataInput input) {
 
-		String fileName = "";
-		String personName = "";
-		String corpID = "";
-		Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
+		String fileName = Constants.STRING_EMPTY;
+		String personName = Constants.STRING_EMPTY;
+		String corpID = Constants.STRING_EMPTY;
+		final Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
+		
 		if (TemplateUtil.templates == null || TemplateUtil.templates.isEmpty()){
 			System.out.println("Calling initializeSystem to generate templates");
 			initializeSystem();
 		}
+		
 		try {
-			personName = uploadForm.get("name").get(0).getBodyAsString();
-			corpID = uploadForm.get("corpid").get(0).getBodyAsString();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
+			if (uploadForm != null) {
+				if (uploadForm.get("name") != null) {
+					personName = uploadForm.get("name").get(0).getBodyAsString();
+				}
+				if (uploadForm.get("corpid") != null) {
+					corpID = uploadForm.get("corpid").get(0).getBodyAsString();
+				}
+			}
+		} catch (final IOException e1) {
 			e1.printStackTrace();
 		}
+		
 		List<InputPart> nameParts = uploadForm.get("name");
 		for (InputPart namePart : nameParts) {
 			MultivaluedMap<String, String> header = namePart.getHeaders();
