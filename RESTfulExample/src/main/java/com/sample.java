@@ -16,8 +16,8 @@ public class sample {
 	/**
 	 * @param args
 	 */
-	private final static String MY_APP_ID = "02dd50a2";
-	private final static String MY_APP_KEY = "1a92c1524422295bdcf5b67083d4ede6";
+	private final static String MY_APP_ID = "ca93349d";
+	private final static String MY_APP_KEY = "39f1471c3d057b222f0795a7ae2c97cd";
 	private final static String MY_APP_SESSION = "FidelitySession";
 	private final static String MY_APP_FORMAT = "json";
 	//private final static String IMAGE_PATH = "C:\\Workspace\\Pics\\Amogh.jpg";
@@ -30,8 +30,7 @@ public class sample {
 
 	public static String sync_process_image_upload(String s) throws JSONException {
 		// call the nViso API for processing the image
-		nViso3DFIHttpClient client = new nViso3DFIHttpClient(MY_APP_ID,
-				MY_APP_KEY);
+		nViso3DFIHttpClient client = new nViso3DFIHttpClient(MY_APP_ID,	MY_APP_KEY);
 		MashapeResponse<JSONObject> response = client.processImageByUpload(
 				new File(s), MY_APP_SESSION, "0", MY_APP_FORMAT);
 

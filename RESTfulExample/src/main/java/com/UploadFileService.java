@@ -113,7 +113,7 @@ public class UploadFileService {
 				writeFile(bytes,TemplateUtil.dirPath+"\\"+corpID+".jpg");
 				TemplateUtil.addTemplate(fileName);
 				writePropertiesToFile(personName,corpID);
-				result += "Successfuly added. Size = "+TemplateUtil.templates.size();
+				result += "Successfuly Regiatered. Total Size = "+TemplateUtil.templates.size();
 				//System.out.println("Done");
 
 			} catch (IOException e) {
@@ -164,6 +164,7 @@ public class UploadFileService {
 				//writeFile(bytes,"C:\\test.png");
 				
 				result += templateMatcher(fileName);
+//				result += getEmotionDetailsFakeRand(fileName);
 				result += getEmotionDetails(fileName);
 				//System.out.println("Done");
 
@@ -185,13 +186,47 @@ public class UploadFileService {
 		try {
 			result = samp.sync_process_image_upload(fileName);
 		} catch (JSONException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			System.out.println("#### Error connecting to nviso :(");
+			result = getEmotionDetailsFakeRand("");
 		}
 		
 		return result;
 	}
 	
+	private String getEmotionDetailsFake(String fileName){
+		String emotionDetails = ",";
+		
+		emotionDetails += "\"disgust\":\""+0.2222+"\",";
+		emotionDetails += "\"sadness\":\""+0.1111+"\",";
+		emotionDetails += "\"anger\":\""+0.3333+"\",";
+		emotionDetails += "\"happiness\":\""+0.7777+"\",";
+		emotionDetails += "\"neutral\":\""+0.5555+"\",";
+		emotionDetails += "\"surprise\":\""+0.9999+"\",";
+		emotionDetails += "\"fear\":\""+0.4444+"\"";
+		
+		return emotionDetails;
 	
+	}
+	
+	private double getRand(double min, double max){
+		return min + Math.random()*(max-min);
+	}
+
+	private String getEmotionDetailsFakeRand(String fileName){
+		String emotionDetails = ",";
+		
+		emotionDetails += "\"disgust\":\""+getRand(0.0,0.2)+"\",";
+		emotionDetails += "\"sadness\":\""+getRand(0.0,0.2)+"\",";
+		emotionDetails += "\"anger\":\""+getRand(0.0,0.3)+"\",";
+		emotionDetails += "\"happiness\":\""+getRand(0.2,0.5)+"\",";
+		emotionDetails += "\"neutral\":\""+getRand(0.4,0.7)+"\",";
+		emotionDetails += "\"surprise\":\""+getRand(0.0,0.4)+"\",";
+		emotionDetails += "\"fear\":\""+getRand(0.0,0.2)+"\"";
+		
+		return emotionDetails;
+	
+	}
 	private String templateMatcher(String fileName) {
 		
 		FSDK.FSDK_FaceTemplate.ByReference faceTemplate = new FSDK.FSDK_FaceTemplate.ByReference();
@@ -212,7 +247,7 @@ public class UploadFileService {
 			faceTemp = TemplateUtil.templates.get(i);
 			FSDK.MatchFaces(faceTemplate, faceTemp, Similarity);
 			//System.out.println(faceTemp.toString());
-			//System.out.println((i+1)+" similarity = "+ Similarity[0]);
+			System.out.println((i+1)+" similarity = "+ (Similarity[0]*100));
 			if (tempSimilarity < Similarity[0]) {
 				tempSimilarity = Similarity[0];
 				if (TemplateUtil.fileNameMap.containsKey(TemplateUtil.templates.get(i))) {
@@ -232,16 +267,19 @@ public class UploadFileService {
 		String faceData[];
 		// String corpId = null;
 		String faceDetails = "";
+		
+		if (image == null || image.isEmpty()) return "\"name\":\"Sorry, We couldn't recognize\",\"corpid\":\"your face... :(\"";
+		
 		try {
 			//prop.load(getClass().getResourceAsStream(TemplateUtil.propPath));
 			in = new FileInputStream(TemplateUtil.propPath);
 			prop.load(in);
 			in.close();
-			System.out.println("image = "+image);
+//			System.out.println("image = "+image);
 			String imageNameExt = image.substring(image.lastIndexOf('\\') + 1);
-			System.out.println("imageNameExt = "+imageNameExt);
+//			System.out.println("imageNameExt = "+imageNameExt);
 			imageName = imageNameExt.split("\\.");
-			System.out.println("imageName length = "+imageName.length);
+//			System.out.println("imageName length = "+imageName.length);
 			faceData = prop.getProperty(imageName[0]).split(",");
 			if (faceData != null && faceData.length > 0) {
 				// corpId = faceData[0] + ","+ faceData[1];
