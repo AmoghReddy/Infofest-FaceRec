@@ -185,7 +185,7 @@ public class UploadFileService {
 		sample samp = new sample();
 		try {
 			result = samp.sync_process_image_upload(fileName);
-		} catch (JSONException e) {
+		} catch (Exception e) {
 			//e.printStackTrace();
 			System.out.println("#### Error connecting to nviso :(");
 			result = getEmotionDetailsFakeRand("");
